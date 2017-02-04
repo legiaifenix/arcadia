@@ -1,0 +1,19 @@
+{
+    "name": "legiaifenix/arcadia",
+    "description": "Arcadia aims to provide a quick image parsing and uploading solution using laravel tooling. The idea is to just pass the file and have everything done for you",
+    "license": "MIT",
+    "version": "0.0.1",
+    "authors": [
+        {
+            "name": "Legiai Fenix",
+            "email": "legiaifenix@gmail.com"
+        }
+    ],
+    "autoload": {
+      "psr-4": {
+          "LegiaiFenix\\Arcadia\\": "src"
+      }
+    },
+    "minimum-stability": "dev",
+    "require": {}
+}

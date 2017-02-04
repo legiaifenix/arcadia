@@ -1,4 +1,7 @@
 <?php
+namespace LegiaiFenix\Arcadia;
+
+use LegiaiFenix\Arcadia\model\ArcadiaL;
 
 class ArcadiaFactory
 {
@@ -12,7 +15,8 @@ class ArcadiaFactory
         $this->factory = $this->chooseArchitecture($architecture, $max_size);
         
         if( @empty($this->factory) ){
-            throw new \ArchitectureNotSupportedException($architecture." architecture not supported", "the provided architecture is not supported at this moment. Please select only supported architectures: Laravel");
+            //throw new \ArchitectureNotSupportedException($architecture." architecture not supported", "the provided architecture is not supported at this moment. Please select only supported architectures: Laravel");
+            return "Architecture exception";
         }
     }
 

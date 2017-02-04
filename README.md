@@ -49,6 +49,15 @@ This factory will require you to already provide the path you wish to store your
     new ArcadiaFactory('', 'public', 'uploads', 50000);
   ```
 
+##It all starts from somewhere
+
+    Arcadia will instanciate a model through the factory initiation. You can access such object to ask it to do the functionalities
+    you desire, by just asking for it via factory:
+
+    ```
+        $arcadiaF->getFactory();
+    ```
+
 ##Uploading an image
 
     We can start uploading an image by passing the field parameter through our factory:
@@ -104,4 +113,22 @@ This factory will require you to already provide the path you wish to store your
         jpeg
         jpg
         gif
+    ```
+
+    You can also delete all images from a folder by using the list function in a for loop with the delete:
+
+    ```
+        $list = $factory->getFactory()->listImages('/uploads/2017/02');
+        foreach ($list as $item) {
+        	$factory->getFactory()->deleteImage($item);
+        }
+    ```
+
+    Or even just delete .gifs from a folder:
+
+    ```
+            $list = $factory->getFactory()->listImages('/uploads/2017/02', 'gif');
+            foreach ($list as $item) {
+            	$factory->getFactory()->deleteImage($item);
+            }
     ```

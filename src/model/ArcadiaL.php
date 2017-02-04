@@ -1,4 +1,8 @@
 <?php
+namespace LegiaiFenix\Arcadia\model;
+
+
+use LegiaiFenix\Arcadia\interfaces\ImageProcessorInterface;
 
 final class ArcadiaL implements ImageProcessorInterface
 {
@@ -127,12 +131,35 @@ final class ArcadiaL implements ImageProcessorInterface
      */
     public function deleteImage($image_path)
     {
-        if( !file_exists($this->folder_path) ) {
-            if( $this->fileGuardian() ){
+        return $this->deleteSingleFile($image_path);
+    }
+
+    /**
+     * DELETE - Deletes single file
+     *
+     * @param $image_path
+     * @return bool
+     */
+    private function deleteSingleFile($image_path)
+    {
+        if( file_exists($image_path) ) {
+            if( $this->fileGuardian($image_path) ){
                 return unlink($image_path);
             }
-        }
+        } else {
 
+            if( file_exists($this->folder_path.$image_path) ) {
+                $image_path = $this->folder_path.$image_path;
+            } else if( file_exists($this->folder_path.'/'.$image_path) ) {
+                $image_path = $this->folder_path.'/'.$image_path;
+            }
+
+            if( file_exists($image_path) ) {
+                if( $this->fileGuardian($image_path) ) {
+                    return unlink($image_path);
+                }
+            }
+        }
         return false;
     }
 
@@ -147,8 +174,12 @@ final class ArcadiaL implements ImageProcessorInterface
     public function listImages($folder_path, $amount = -1, $type = "")
     {
         $files = [];
-        if (is_dir(realpath($_SERVER['DOCUMENT_ROOT'].$folder_path))){
 
+        if( substr($folder_path, -1) != "/" ) {
+            $folder_path .= '/';
+        }
+
+        if (is_dir(realpath($_SERVER['DOCUMENT_ROOT'].$folder_path))){
             if( @empty($type) ) {
                 $files = glob($_SERVER['DOCUMENT_ROOT'].$folder_path . "*");
             } else if( is_array($type) ) {

@@ -1,4 +1,5 @@
 <?php
+namespace LegiaiFenix\Arcadia\interfaces;
 
 interface ImageProcessorInterface
 {
