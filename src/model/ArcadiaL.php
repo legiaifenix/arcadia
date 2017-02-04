@@ -3,6 +3,7 @@ namespace LegiaiFenix\Arcadia\model;
 
 
 use LegiaiFenix\Arcadia\interfaces\ImageProcessorInterface;
+use LegiaiFenix\Arcadia\services\ImageSupporter;
 
 final class ArcadiaL implements ImageProcessorInterface
 {
