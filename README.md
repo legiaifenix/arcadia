@@ -5,7 +5,7 @@
 
 **Description:**
 
-Arcadia aims to provide a quick image parsing and uploading solution using laravel tooling. The idea is to just pass the file and have everything done for you
+Arcadia aims to provide a quick image parsing and uploading solution. The idea is to just pass the file and have everything done for you
 Please note that this package is under development and aims to help the production of developers so they can focus on other aspects
 of their projects.
 **No harmful effect that comes out of it shall be linked to the package creator**. The use of the package its entirely under
