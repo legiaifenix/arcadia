@@ -8,8 +8,6 @@
 Arcadia aims to provide a quick image parsing and uploading solution. The idea is to just pass the file and have everything done for you
 Please note that this package is under development and aims to help the production of developers so they can focus on other aspects
 of their projects.
-**No harmful effect that comes out of it shall be linked to the package creator**. The use of the package its entirely under
-the responsibility of the user and shall not link any responsibility to the creator.
 
 **Introduction to the package name:**
 Arcadia was a greek land that became an imaginary country with time by the hand of many poets and artists. Within Arcadia,
@@ -84,10 +82,10 @@ Example of listing all svgs from uploads/2017/02:
     $factory->getFactory()->listImages('/uploads/2017/02/', -1, 'svg');
 ```
 
-Example of listing the first 5 pngs from uploads/2017/02:
+Example of listing the first 5 jpgs from uploads/2017/02:
 
 ```
-    $factory->getFactory()->listImages('uploads/2017/02/', 5, 'png');
+    $factory->getFactory()->listImages('uploads/2017/02/', 5, 'jpg');
 ```
 
 Example of returned array:
