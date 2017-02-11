@@ -20,7 +20,7 @@ was just on spot. We aim to provide simple and clean solutions to real problems,
 ```
     |       Functionality         |    Function Name   |       Variables       |    Returns       |
     |-----------------------------|--------------------|-----------------------|------------------|
-    |  Add Images                 |    uploadImage()   |  file_name            | false, filename  |
+    |  Add Images                 |    uploadImage()   |  file_name, path      | false, filename  |
     |  List Images From Folder    |    listImages()    |  folder, amount, type | array            |
     |  Deletes Images From Folder |    deleteImage()   |  image with path      | boolean          |
 ```
@@ -36,7 +36,7 @@ folder structure where images are sent to the path **<project>/public/<any folde
 If you provide the first arguments it will keep your folder structure to store the images:
 
 ```
-   new ArcadiaFactory('', 'web', 'uploads');
+   new ArcadiaFactory('web', 'uploads');
 ```
 
 We can also specify a limit for the images upload at the end of the variables when creating the factory object.
@@ -44,7 +44,7 @@ If nothing is specified it will limit to 2MB.
 In this example we are allowing 50MB. Of course, always make sure your **php.ini** accepts your variables.
 
 ```
-  new ArcadiaFactory('', 'public', 'uploads', 50000);
+  new ArcadiaFactory('public', 'uploads', 50000);
 ```
 
 ##It all starts from somewhere
@@ -61,8 +61,18 @@ you desire, by just asking for it via factory:
 We can start uploading an image by passing the field parameter through our factory:
 
 ```
-    $arcadiaF = new ArcadiaFactory('', 'public', 'uploads');
+    $arcadiaF = new ArcadiaFactory('public', 'uploads');
     $arcadiaF->getFactory()->uploadImage('img');
+```
+
+If no path is specified when uploading it will follow a WP structure inside the target folder specified when constructing the factory.
+But if you wish to specify a different folder you can pass a path into it.
+What it will do is check the root folder and check if the specified new one exists (will create if don't).
+Then uploads the file.
+
+```
+    $arcadiaF = new ArcadiaFactory('public', 'uploads');
+    $arcadiaF->getFactory()->uploadImage('img', 'tmp');
 ```
 
 Where **img** field exists as **html** file input:

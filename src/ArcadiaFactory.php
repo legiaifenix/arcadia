@@ -10,7 +10,7 @@ class ArcadiaFactory
     protected $factory;
 
 
-    public function __construct( $architecture = "", $main_folder = "public", $safe = "uploads", $max_size = 2000)
+    public function __construct( $main_folder = "public", $safe = "uploads", $max_size = 2000)
     {
         $this->environmentPreparation($main_folder, $safe);
         $this->factory = new ArcadiaL( $this->folder_path, $safe, $max_size);
