@@ -7,13 +7,25 @@ use LegiaiFenix\Arcadia\services\ImageSupporter;
 
 final class ArcadiaL implements ImageProcessorInterface
 {
-    protected $folder_path, $max_size;
-    protected $permission = 0775;
+    protected $folder_path, $targetFolder,$max_size;
+    protected $permission   = 0775;
+    protected $WPStyle      = true;
 
-    public function __construct($folder_path, $max_size)
+    public function __construct($folder_path, $safe,  $max_size)
     {
         $this->folder_path  = $folder_path;
+        $this->targetFolder = $safe;
         $this->max_size     = $max_size;
+    }
+
+    /**
+     * GET MAIN PATH - Glues together the root path and the target desired dir
+     *
+     * @return string
+     */
+    private function getMainPath()
+    {
+        return $this->folder_path.'/'.$this->targetFolder;
     }
 
     /**
@@ -23,7 +35,7 @@ final class ArcadiaL implements ImageProcessorInterface
      * @param $field_name
      * @return bool|string
      */
-    public function uploadImage($field_name)
+    public function uploadImage($field_name, $path = "")
     {
         if( empty($field_name) ){
             //todo throw empty exception
@@ -34,12 +46,61 @@ final class ArcadiaL implements ImageProcessorInterface
             return "Could not find the file";
         }
 
+        $this->parseUserAddedFolder($path);
+
+
         if($this->folderStructure() ) {
+            //uses WP folder structure
             return $this->addImage($field_name);
         }
 
-
         return false;
+    }
+
+    private function parseUserAddedFolder($path)
+    {
+        if( @!empty($path) ){
+            //makes sure root folde rwas not also passed and parses name sent
+            $path = ImageSupporter::parseFileName(ImageSupporter::removeWordFromString($this->folder_path, $path));
+            $path = $this->checkPathExistence($path);
+        }
+        return $path;
+    }
+
+    /**
+     * VALIDATION - checks if given path exists to know if needs creating
+     * If it does not pass any validation sense then FORCES WP structure!
+     *
+     * @param $path
+     * @return bool
+     */
+    public function checkPathExistence($path)
+    {
+        if( !file_exists($path) ) {
+            
+            if( file_exists($this->getMainPath().'/'.$path) ){
+                $this->targetFolder .= '/'.$path;
+                return true;
+            }
+
+            //check if main root folder was forgotten
+            if( file_exists($this->folder_path.'/'.$path) ){
+                $this->targetFolder = $path;
+                return true;
+            }
+
+            if( file_exists($this->folder_path) && !file_exists($this->folder_path.'/'.$path) ) {
+                mkdir($this->folder_path.'/'.$path, $this->permission);
+                $this->targetFolder = $path;
+                return true;
+            }
+
+            //could not pass the numerous validations so forces WP structure
+            $this->WPStyle = true;
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -50,19 +111,21 @@ final class ArcadiaL implements ImageProcessorInterface
      */
     private function folderStructure()
     {
-        $folder_structure = [date('Y'), date('m')];
-        foreach ($folder_structure as $folder) {
-            $this->folder_path .= '/'.$folder;
-            if( !file_exists($this->folder_path) ) {
-                mkdir($this->folder_path, $this->permission);
+        if( $this->WPStyle ){
+            $folder_structure = [date('Y'), date('m')];
+            foreach ($folder_structure as $folder) {
+                $this->targetFolder .= '/'.$folder;
+                if( !file_exists($this->getMainPath()) ) {
+                    mkdir($this->getMainPath(), $this->permission);
+                }
             }
         }
 
-        return file_exists($this->folder_path);
+        return file_exists($this->getMainPath());
     }
 
     /**
-     * GUARDIAN - Checks if path points to image. Any other file it does not allow further
+     * VALIDATION - Checks if path points to image. Any other file it does not allow further
      * process
      *
      * @param $file_path
@@ -74,12 +137,19 @@ final class ArcadiaL implements ImageProcessorInterface
             || strpos($file_path, '.jpg')
             || strpos($file_path, '.jpeg')
             || strpos($file_path, '.svg')
-            || strpos($file_path, '.gif')){
+            || strpos($file_path, '.gif')
+            || strpos($file_path, '.ico') ){
             return true;
         }
         return false;
     }
 
+    /**
+     * VALIDATION - checks if item owns an image type extention
+     *
+     * @param $field_name
+     * @return bool
+     */
     private function isImage($field_name)
     {
         $allowed = [
@@ -113,8 +183,9 @@ final class ArcadiaL implements ImageProcessorInterface
     {
         if( $this->isImage($field_name) ){
             $filename = ImageSupporter::parseFileName($_FILES[$field_name]['name']);
-            if (move_uploaded_file($_FILES[$field_name]["tmp_name"], $this->folder_path.'/'.$filename)) {
-                return $this->folder_path.'/'.$filename;
+
+            if (move_uploaded_file($_FILES[$field_name]["tmp_name"], $this->getMainPath().'/'.$filename)) {
+                return $this->getMainPath().'/'.$filename;
             }
 
             return false;
@@ -149,10 +220,10 @@ final class ArcadiaL implements ImageProcessorInterface
             }
         } else {
 
-            if( file_exists($this->folder_path.$image_path) ) {
-                $image_path = $this->folder_path.$image_path;
-            } else if( file_exists($this->folder_path.'/'.$image_path) ) {
-                $image_path = $this->folder_path.'/'.$image_path;
+            if( file_exists($this->getMainPath().$image_path) ) {
+                $image_path = $this->getMainPath().$image_path;
+            } else if( file_exists($this->getMainPath().'/'.$image_path) ) {
+                $image_path = $this->getMainPath().'/'.$image_path;
             }
 
             if( file_exists($image_path) ) {
@@ -231,7 +302,17 @@ final class ArcadiaL implements ImageProcessorInterface
     {
         $this->folder_path = $folder_path;
     }
-    
+
+
+    public function removeWPFolderStructure()
+    {
+        $this->WPStyle = false;
+    }
+
+    public function activateWPFolderStructure()
+    {
+        $this->WPStyle = true;
+    }
     
     
     

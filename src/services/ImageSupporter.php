@@ -17,4 +17,16 @@ class ImageSupporter
         return $filename;
     }
 
+    /**
+     * REMOVE - Deletes word from string
+     * 
+     * @param $word
+     * @param $sample
+     * @return mixed
+     */
+    public static function removeWordFromString($word, $sample)
+    {
+        return str_replace($word, '', $sample);
+    }
+
 }

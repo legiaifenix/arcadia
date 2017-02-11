@@ -2,32 +2,18 @@
 namespace LegiaiFenix\Arcadia;
 
 use LegiaiFenix\Arcadia\model\ArcadiaL;
+use LegiaiFenix\Arcadia\services\ImageSupporter;
 
 class ArcadiaFactory
 {
-    protected $folder_path, $main_folder;
+    protected $folder_path, $targetFolder;
     protected $factory;
 
 
     public function __construct( $architecture = "", $main_folder = "public", $safe = "uploads", $max_size = 2000)
     {
         $this->environmentPreparation($main_folder, $safe);
-        $this->factory = $this->chooseArchitecture($architecture, $max_size);
-        
-        if( @empty($this->factory) ){
-            //throw new \ArchitectureNotSupportedException($architecture." architecture not supported", "the provided architecture is not supported at this moment. Please select only supported architectures: Laravel");
-            return "Architecture exception";
-        }
-    }
-
-    private function chooseArchitecture($architecture, $max_size)
-    {
-        switch ($architecture) {
-            case "laravel":
-                return new ArcadiaL($this->folder_path, $max_size);
-            default:
-                return new ArcadiaL($this->folder_path, $max_size);
-        }
+        $this->factory = new ArcadiaL( $this->folder_path, $safe, $max_size);
     }
 
     /**
@@ -39,8 +25,9 @@ class ArcadiaFactory
      */
     private function environmentPreparation($main_folder, $safe)
     {
-        $this->folder_path = str_replace( 'public', '', $_SERVER['DOCUMENT_ROOT']);
-        $this->folder_path .= str_replace('/', '', $main_folder).'/'.str_replace('/', '', $safe);
+        $this->folder_path = str_replace( $main_folder, '', $_SERVER['DOCUMENT_ROOT']);
+        $this->folder_path .= ImageSupporter::parseFileName($main_folder);
+        $this->targetFolder = ImageSupporter::parseFileName($safe);
     }
 
     /**
@@ -50,6 +37,8 @@ class ArcadiaFactory
     {
         return $this->factory;
     }
+
+
     
     
 
