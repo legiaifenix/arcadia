@@ -28,5 +28,17 @@ class ImageSupporter
     {
         return str_replace($word, '', $sample);
     }
+    
+    public static function parseFolderStructure($folder)
+    {
+        $specialChars = ['|', '!', '"', '#', '$', '%', '&', '/', '(', ')', '=', '?', '«', '»', '{', '[', ']', '}'
+            , '*', '\'', '+', '^', 'ª', 'º', ',', '..', ';', ':', '<', '>'];
+
+        $folder = strtolower($folder);
+        $folder = str_replace($specialChars, '', $folder);
+        $folder = str_replace(' ', '-', $folder);
+        
+        return $folder;
+    }
 
 }

@@ -26,8 +26,8 @@ class ArcadiaFactory
     private function environmentPreparation($main_folder, $safe)
     {
         $this->folder_path = str_replace( $main_folder, '', $_SERVER['DOCUMENT_ROOT']);
-        $this->folder_path .= ImageSupporter::parseFileName($main_folder);
-        $this->targetFolder = ImageSupporter::parseFileName($safe);
+        $this->folder_path .= ImageSupporter::parseFolderStructure($main_folder);
+        $this->targetFolder = ImageSupporter::parseFolderStructure($safe);
     }
 
     /**
