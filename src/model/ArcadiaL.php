@@ -60,6 +60,7 @@ final class ArcadiaL implements ImageProcessorInterface
     private function parseUserAddedFolder($path)
     {
         if( @!empty($path) ){
+            $this->WPStyle = false;
             //makes sure root folde rwas not also passed and parses name sent
             $path = ImageSupporter::parseFolderStructure(ImageSupporter::removeWordFromString($this->folder_path, $path));
             $path = $this->checkPathExistence($path);
@@ -185,6 +186,7 @@ final class ArcadiaL implements ImageProcessorInterface
             $filename = ImageSupporter::parseFileName($_FILES[$field_name]['name']);
 
             if (move_uploaded_file($_FILES[$field_name]["tmp_name"], $this->getMainPath().'/'.$filename)) {
+                $this->WPStyle = true;
                 return $this->getMainPath().'/'.$filename;
             }
 
