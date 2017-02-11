@@ -61,7 +61,7 @@ final class ArcadiaL implements ImageProcessorInterface
     {
         if( @!empty($path) ){
             //makes sure root folde rwas not also passed and parses name sent
-            $path = ImageSupporter::parseFileName(ImageSupporter::removeWordFromString($this->folder_path, $path));
+            $path = ImageSupporter::parseFolderStructure(ImageSupporter::removeWordFromString($this->folder_path, $path));
             $path = $this->checkPathExistence($path);
         }
         return $path;
