@@ -16,6 +16,10 @@ final class ArcadiaL implements ImageProcessorInterface
         $this->folder_path  = $folder_path;
         $this->targetFolder = $safe;
         $this->max_size     = $max_size;
+        
+        if( !file_exists($this->getMainPath()) ) {
+            mkdir($this->getMainPath(), $this->permission);
+        }
     }
 
     /**
